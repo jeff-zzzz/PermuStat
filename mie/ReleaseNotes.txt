@@ -1,0 +1,7 @@
+Mimir -- b317 with GTEN
+
+Release Notes:
+Added new mechanism to add ROIs to a Source Montage
+-  '+' button added to each ROI list for Source Montages.  Upon
+clicking, the ROI creation process will be started and the resulting
+ROI added to the active Source Montage.

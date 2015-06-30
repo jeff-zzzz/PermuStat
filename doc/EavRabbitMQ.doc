@@ -1,0 +1,53 @@
+
+Hi Jasmine, Jidong,
+    I have just completed a Python module for you to use that will
+    allow any Python code you write to set values inside the EAV
+    (either triples or oriented).  Attached is an archive for the
+    module and a simple test script that will help you learn how to
+    use it.  To install this, you need to place the directory that you
+    extract from the archive (called RabbitMQ) into a directory on
+    your PYTHONPATH. If you want to add a new directory to your
+    PYTHONPATH you can simply edit the file ~/.bash_profile and add
+    the line:
+
+export PYTHONPATH=$PYTHONPATH:<the_new_directory>
+
+When you restart your Terminal, the change will be there.
+
+To use the new package we first import what we need:
+
+from RabbitMQ import Connection
+
+Then we create a connection.  This connection can be reused until you
+are done with your application:
+
+conn = Connection.Connection("localhost")
+conn.connect()
+
+Now, we can begin sending data directory from numpy arrays.
+Oriented data need only have the scalar value per dipole
+Triples data must be formatted as:
+[x0, x1, x2, ..., x_n y1, y2, y3, ..., y_n, z1, z2, z3, ..., z_n]
+
+orientedArray = numpy.arange(numDipoles).asType('float')
+x = numpy.arange(numTriples).asType('float') / float(numTriples)
+triplesArray = numpy.concatenate((x, x, x))
+
+Now send the data
+conn.sendTriplesData(triplesArray, "Triples Example Condition",
+"12:34:56.000")
+conn.sendOrientedData(orientedArray, "Oriented Example Condition",
+"17:16:15.432")
+
+The first parameter in each of these is the data, the second is the
+name of the condition to set -- this will appear in the "condition
+info widget" condition pull-down menu.  The last parameter is the time
+to display for this condition.
+
+Before you exit your application, make sure the connection is closed:
+conn.disconnect()
+
+You're now done!!
+
+Thanks,
+Erik

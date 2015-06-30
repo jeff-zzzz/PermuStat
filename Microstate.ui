@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FormStat</class>
+ <widget class="QWidget" name="FormStat">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>432</width>
+    <height>435</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PermuStat</string>
+  </property>
+  <widget class="QTabWidget" name="tabPermuStat">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>391</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>600</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
+   <property name="tabPosition">
+    <enum>QTabWidget::North</enum>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="tabData">
+    <attribute name="title">
+     <string>Data</string>
+    </attribute>
+    <widget class="QPushButton" name="pbMFF">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>20</y>
+       <width>301</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>MFF</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pbHeadModel">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>60</y>
+       <width>301</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Head Model</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_Method">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>110</y>
+       <width>71</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Method : </string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="cbMethod">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>100</y>
+       <width>141</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>MN</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>sMN</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>CSL</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>LORETA</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QProgressBar" name="progressBar">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>200</y>
+       <width>271</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>150</y>
+       <width>291</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>PushButton</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tabSource">
+    <attribute name="title">
+     <string>Source</string>
+    </attribute>
+    <widget class="QRadioButton" name="rbScalp">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>30</y>
+       <width>170</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Scalp</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="rbSource">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>70</y>
+       <width>170</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Source</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tabLevel">
+    <attribute name="title">
+     <string>Level</string>
+    </attribute>
+    <widget class="QRadioButton" name="rbIndividual">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>30</y>
+       <width>170</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Individual (First Level)</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="rbGroup">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>80</y>
+       <width>170</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Group (Second level)</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tabParametric">
+    <attribute name="title">
+     <string>Parametric</string>
+    </attribute>
+    <widget class="QRadioButton" name="rbPara">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>30</y>
+       <width>170</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Parametric</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="rbNonPara">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>70</y>
+       <width>170</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>NonParametric</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tabStat">
+    <attribute name="title">
+     <string>Stat</string>
+    </attribute>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>30</y>
+       <width>110</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Significant Level</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>110</y>
+       <width>110</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Num. Simulation</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>70</y>
+       <width>110</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Output Suffix</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="editSigLevel">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>30</y>
+       <width>100</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="inputMask">
+      <string>0.05</string>
+     </property>
+     <property name="text">
+      <string>0.05</string>
+     </property>
+     <property name="cursorPosition">
+      <number>4</number>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="editOutput">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>70</y>
+       <width>100</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="inputMask">
+      <string>out</string>
+     </property>
+     <property name="text">
+      <string>out</string>
+     </property>
+     <property name="maxLength">
+      <number>3</number>
+     </property>
+     <property name="cursorPosition">
+      <number>3</number>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="editNumSim">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>110</y>
+       <width>100</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="inputMask">
+      <string>100</string>
+     </property>
+     <property name="text">
+      <string>100</string>
+     </property>
+     <property name="maxLength">
+      <number>3</number>
+     </property>
+     <property name="cursorPosition">
+      <number>3</number>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tabTest">
+    <attribute name="title">
+     <string>Test</string>
+    </attribute>
+    <widget class="QRadioButton" name="rbTwoT">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>80</y>
+       <width>141</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Two Sample T-test</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="rbPairT">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>160</y>
+       <width>141</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Paired T-test</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="rbOneT">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>141</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>One Sample T-test</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>50</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Category</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>105</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Category 1</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>130</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Category 2</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>185</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Category 1</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>210</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Category 2</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>50</y>
+       <width>141</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>New Item0</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>New Item1</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="comboBox_3">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>100</y>
+       <width>141</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_4">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>130</y>
+       <width>141</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_5">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>170</y>
+       <width>141</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_6">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>200</y>
+       <width>141</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="pbRunStat">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>310</y>
+     <width>391</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Run</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pbStatClose">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>360</y>
+     <width>391</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

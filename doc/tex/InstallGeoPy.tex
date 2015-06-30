@@ -1,0 +1,216 @@
+\documentclass[10pt]{article}
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage{hyperref, lscape, rotating, color, colortbl, amsfonts, amsmath, xcolor}  
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage[round]{natbib}
+\graphicspath{{./Figure/}, {./M1S1fMRIROI/}} %path for figures
+\newcommand{\comments}[1]{}
+
+\title{EAV, libMff, anaconda, RabbitMQ, pika, and GeoPy }
+%\author{Jasmine Song$^{\ast}$ } 
+%\address{$^{\ast}$Electrical Geodesics, Inc. 500 East 4th Ave., Suite 200, Eugene OR 97401, USA}
+%\date{\today} 
+
+\begin{document}
+%\maketitle
+\section{EAV and libMFF}
+\begin{verbatim} 
+/Shared/Users/Erik/EAV/systemPython/EAV.app.tar.gz  
+/Shared/Users/Erik/libMFF/build_python/libMFF.so 
+\end{verbatim} 
+\begin{itemize}
+\item EAV will be installed in /Applications/EAV/ 
+\item Put libMFF.so in GeoPy/mff\_python/
+\end{itemize}
+
+\section{anaconda}
+\begin{verbatim} 
+http://continuum.io/downloads
+\end{verbatim} 
+\begin{itemize}
+\item Download Mac OS X - 64 Bit Python 27 Graphical Installer 
+\item Install Anaconda-2.2.0-MacOSX-x86\_64.pkg 
+\item In .profile: will be added   
+\begin{verbatim} 
+# added by Anaconda 2.2.0 installer                                             
+export PATH="/Users/jesong1126/anaconda/bin:$PATH" 
+\end{verbatim} 
+\end{itemize}
+
+\section{RabbitMQ} \label{sec:intro} 
+\subsection{Downloading and Installing RabbitMQ} 
+In \href{http://www.rabbitmq.com/}{http://www.rabbitmq.com/} \\
+Installation Guide \\
+Mac OS X: Homebrew \\
+Open a terminal.  
+\begin{verbatim} 
+jesong1126$ brew update 
+jesong1126$ brew install rabbitmq 
+==> Downloading https://homebrew.bintray.com/bottles/rabbitmq-3.4.4.mavericks.bo
+######################################################################## 100.0%
+==> Pouring rabbitmq-3.4.4.mavericks.bottle.tar.gz
+==> Caveats
+Management Plugin enabled by default at http://localhost:15672
+
+Bash completion has been installed to:
+  /usr/local/etc/bash_completion.d
+
+To have launchd start rabbitmq at login:
+    ln -sfv /usr/local/opt/rabbitmq/*.plist ~/Library/LaunchAgents
+Then to load rabbitmq now:
+    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.rabbitmq.plist
+Or, if you don't want/need launchctl, you can just run:
+    rabbitmq-server
+==> Summary
+??  /usr/local/Cellar/rabbitmq/3.4.4: 1030 files, 27M
+jasminesongspro:Cellar jesong1126$ cd /usr/local/sbin
+jasminesongspro:sbin jesong1126$ ls
+rabbitmq-defaults rabbitmq-plugins  rabbitmqadmin
+rabbitmq-env      rabbitmq-server   rabbitmqctl
+jasminesongspro:sbin jesong1126$ ./rabbitmq-server -detached
+Warning: PID file not written; -detached was passed.
+\end{verbatim}
+
+\subsubsection{In .profile} 
+\begin{verbatim} 
+export PATH=/usr/local/sbin:$PATH
+\end{verbatim}
+
+\subsubsection{In Chrome}
+\begin{verbatim} 
+localhost:15672/#/
+id: guest
+pw: guest 
+\end{verbatim}
+
+\section{pika} \label{sec:pika} 
+\subsection{python} 
+\subsubsection{In ternimal }
+\begin{verbatim} 
+jasminesongspro:~ jesong1126$ sudo pip install pika==0.9.8 
+Password:
+Downloading/unpacking pika==0.9.8
+  Downloading pika-0.9.8.tar.gz (56kB): 56kB downloaded
+  Running setup.py (path:/private/tmp/pip_build_root/pika/setup.py) egg_info for package pika
+    
+Installing collected packages: pika
+  Running setup.py install for pika
+    
+Successfully installed pika
+Cleaning up...
+jasminesongspro:~ jesong1126$ 
+\end{verbatim}
+
+\subsubsection{In .profile} 
+\begin{verbatim} 
+export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python2.7/site-packages
+\end{verbatim}
+
+%send.py 
+%\begin{verbatim} 
+%#!/usr/bin/env python
+%import pika
+%
+%connection = pika.BlockingConnection(pika.ConnectionParameters(
+%        host='localhost'))
+%channel = connection.channel()
+%
+%
+%channel.queue_declare(queue='hello')
+%
+%channel.basic_publish(exchange='',
+%                      routing_key='hello',
+%                      body='Hello World!')
+%print " [x] Sent 'Hello World!'"
+%connection.close()
+%\end{verbatim}
+%
+%receive.py 
+%\begin{verbatim} 
+%#!/usr/bin/env python
+%import pika
+%
+%connection = pika.BlockingConnection(pika.ConnectionParameters(
+%        host='localhost'))
+%channel = connection.channel()
+%
+%channel.queue_declare(queue='hello')
+%
+%print ' [*] Waiting for messages. To exit press CTRL+C'
+%
+%def callback(ch, method, properties, body):
+%    print " [x] Received %r" % (body,)
+%
+%channel.basic_consume(callback,
+%                      queue='hello',
+%                      no_ack=True)
+%
+%channel.start_consuming()
+%\end{verbatim}
+
+\subsection{anaconda ipython}  
+\begin{verbatim} 
+jesong1126$ conda install -c https://conda.binstar.org/auto pika
+Fetching package metadata: ......
+Solving package specifications: .
+Package plan for installation in environment /Users/jesong1126/anaconda:
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    conda-env-2.1.4            |           py27_0          15 KB
+    pika-0.9.13                |           py27_0          96 KB
+    pip-6.1.1                  |           py27_0         1.4 MB
+    ------------------------------------------------------------
+                                           Total:         1.5 MB
+
+The following NEW packages will be INSTALLED:
+
+    pika:      0.9.13-py27_0
+
+The following packages will be UPDATED:
+
+    conda-env: 2.1.3-py27_0 --> 2.1.4-py27_0 
+    pip:       6.0.8-py27_0 --> 6.1.1-py27_0 
+
+Proceed ([y]/n)? y
+
+Fetching packages ...
+conda-env-2.1. 100% |################################| Time: 0:00:00 178.07 kB/s
+pika-0.9.13-py 100% |################################| Time: 0:00:00 374.93 kB/s
+pip-6.1.1-py27 100% |################################| Time: 0:00:01   1.35 MB/s
+Extracting packages ...
+[      COMPLETE      ]|###################################################| 100%
+Unlinking packages ...
+[      COMPLETE      ]|###################################################| 100%
+Linking packages ...
+[      COMPLETE      ]|###################################################| 100%
+jesong1126$ 
+\end{verbatim}
+
+\section{GeoPy}
+GeoPy\_04102015.zip
+
+
+\section{Other packages} \label{sec:matplotlib} 
+\begin{verbatim} 
+jesong1126$ conda update conda
+jesong1126$ conda update anaconda
+jesong1126$ conda install pyqt 
+jesong1126$ sudo pip install six
+jesong1126$ sudo pip install pyparsing
+jesong1126$ sudo pip install matplotlib
+\end{verbatim}
+
+
+
+
+
+%% -------------------------------------------------------------------------
+%\bibliographystyle{IEEEbib}
+%\bibliography{ISBIreference}
+%\bibliography{strings,refs}
+
+\end{document}

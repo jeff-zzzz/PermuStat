@@ -1,0 +1,6 @@
+.DS_Store
+Cacioppo
+data/
+manuscript/
+support/
+*.pyc

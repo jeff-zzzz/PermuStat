@@ -1,0 +1,51 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+{\fonttbl\f0\fswiss\fcharset0 ArialMT;}
+{\colortbl;\red255\green255\blue255;\red26\green26\blue26;\red255\green255\blue255;}
+\margl1440\margr1440\vieww18740\viewh16700\viewkind0
+\deftab720
+\pard\pardeftab720
+
+\f0\fs26 \cf2 \cb3 /Volumes/Shared/Users/Erik/EAV/systemPython/Mimir.app.tar.gz\
+\
+To get this working, just unzip it wherever you would like. Double-clicking on it will run it.\'a0 At this point, you should be able to open a Python Console to verify that this part is working. Now, comes the not-as-fun part:\'a0 exporting the head model.\'a0 To do this, follow the instructions below:\
+\
+Open each of the parts of the model:\
+Left/Right Cortical Hemispheres,\
+Left/Right Inflated Hemispheres,\
+MR Image,\
+Scalp Surface,\
+EEG Net\
+\
+Now load the dipole data as before, for all 4 meshes and for the MR Image (right click on the data set in the DataSet Details area to do this).\
+\
+Once you are happy with your overall head model, you can go to File->Export Head Model\
+Create a new folder (using the New Folder button in the popup) and that is where all of the data files will be re-written to.\'a0 Now, when you want to load a head model, you can just use the Load Head Model item and not have to worry about anything else at all.\'a0 Please be sure to name the head model portions Left/Right Cortex and Left/Right Inflated Cortex for best results in terms of automatic placement of your data!\
+\
+Once that is done, go to the Condition View tab.\'a0 This will put the head model if 4 different condition views.\'a0 Reduce the number to what is appropriate using View->Conditions->Set Number Of Conditions.\'a0 I set it to 1.\
+\
+Now open the Python Console -- I usually un-dock it so that I can look at things a bit better.\'a0 As an example, you can issue the following commands (Note that the head model that I was using to test had 1885 triples dipoles):\
+\
+import numpy\
+PyEGI = egiData.PythonAdapter()\
+scalars = numpy.arange(1885.0)\
+scalars /= 1884.0\
+\
+x = numpy.ones(1885)\
+x /= numpy.sqrt(3)\
+\
+PyEGI.addTriplesCondition("T: test")\
+c = PyEGI.getCondition("T: test")\
+\
+for i in range(1885):\
+\'a0 c.setDipoleScalar(i, scalars[i])\
+\'a0 c.setDipoleDirection(i, x[i], x[i], x[i], False)\
+\
+If you would like to visualize oriented dipoles, use\
+PyEGI.addOrientedCondition("O: test")\
+\
+and do NOT set the Dipole Direction.\
+Once this is done, you should be able to select your new condition from the pulldown menu in the "Condition Information Widget"\
+\
+Feel free to name the conditions whatever you want.\'a0 I use T: and O: to let me know that it is a Triples or Oriented condition.\
+\
+Let me know if you have any problems.}

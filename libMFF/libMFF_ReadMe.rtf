@@ -1,0 +1,210 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww13380\viewh19940\viewkind0
+\deftab720
+\pard\pardeftab720
+
+\f0\fs24 \cf0 \
+\
+Using the libMFF Python Reader:\
+\
+ALL of the information in this .txt file is available by asking the objects for help:\
+\
+>>> import libMFF\
+>>> help(libMFF)\
+>>> # Get a list of the classes\
+>>> print dir(libMFF)\
+>>> help(libMFF.PyCategory)\
+\
+In order to use the libMFF Python Reader, a Reader object must first be created:\
+\
+>>> import libMFF\
+>>> r = libMFF.MFFReader()\
+\
+Secondly, a file must be opened:\
+\
+>>> ret = r.openFile("MyMFFFile.mff")\
+\
+The variable ret, in this case, now contains a boolean value indicating whether or not the\
+opening of the file was successful:\
+\
+>>> if ret:\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0print "File opened successfully"\
+... \'a0\'a0\'a0\'a0\'a0else:\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0print "Could not open file"\
+\
+At this point, the MFFReader now has access to the MFFFile and various aspects of the file\
+may be queried or read. \'a0However, the raw data is NOT yet ready to be loaded from the file.\
+We will begin by reading all of the meta-data from a file:\
+\
+>>> numCategories = r.readCategories()\
+>>> numEpochs = r.readEpochs()\
+>>> numPNSSets = r.readPNSSets()\
+>>> numInfoN = r.readInfoN()\
+>>> numEventTracks = r.readEventTracks()\
+\
+Now we have all the meta data for the file. \'a0Each type of data can be accessed as follows:\
+\
+>>> category = r.getCategory(0)\
+>>> epoch = r.getEpoch(0)\
+>>> pnsset = r.getPNSSet(0)\
+>>> eventTrack = r.getEventTrack(0)\
+\
+You will notice that 0 indicates the first of each type of item. \'a0To read all items, and put them into\
+a list, you may do something like this:\
+\
+>>> epochs = []\
+>>> for i in range(numEpochs):\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0epochs.append(r.getEpoch(i))\
+\
+To get specific data out of each of these types, please refer to the help documentation of each type of\
+item:\
+\
+>>> help(libMFF.PyCategory)\
+>>> help(libMFF.PyEpoch)\
+>>> help(libMFF.PyPNSSet)\
+>>> help(libMFF.PyEventTrack)\
+etc.\
+\
+Now, we are ready to begin reading data. \'a0There are a number of ways this may be done. \'a0For smaller files\
+it is possible to read the entire file all at once. \'a0This is done as follows:\
+\
+>>> numSignalBlocks = r.prepareSignalBlocks()\
+>>> numBlocksRead = r.readSignalBlocks()\
+>>> # Do something with the signal blocks....\
+>>> memoryFreed = r.releaseSignalBlocks();\
+\
+The above 2 lines will read ALL signal blocks within an MFF file. This is only appropriate when the file is\
+relatively small. \'a0If the file is very large, each signal source may be read separately block by block. \'a0To do this, we\
+still must first prepare the signal blocks. \'a0This does NOT read them, so it is safe to do this for each file before reading:\
+\
+>>> numSignalBlocks = r.prepareSignalBlocks()\
+\
+This does NOT read data, but it prepares all the meta-data required for reading. \'a0To read a large file, you must use a for-loop\
+like structure:\
+\
+>>> signals = []\
+>>> for i in range(numInfoN):\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0signals.append("MyMFFFile.mff/signal" + str(i) + ".bin")\
+>>> for i in range(numSignalBlocks):\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0numBlocksRead = r.readSignalBlocksFromInfoN(signals[0], r.getInfoN(0), i, i+1)\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0for(j in range(r.numSignalBlocks(r.getInfoN(0))):\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0signalBlock = r.getSignalBlock(r.getInfoN(0), j)\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0# \'a0Do something with the signal block\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0memoryFreed = r.releaseSignalBlock(signalBlock)\
+\
+In the above code, we first generate a list of filenames within the MFF File. \'a0The first for loop is just one way of doing this.\
+The second for loop first reads a number of signal blocks (in this case, 1) and then the inner loop extracts the SignalBlock from\
+the MFFReader, does some operation on the block, and then releases the memory associated with the SignalBlock. \'a0When reading\
+signals in this fashion, it is VERY important to release the data as soon as you are done using it. \'a0Failure to do this will eventually\
+consume all the memory of your computer.\
+\
+You are now done reading an MFF File!\
+\
+\
+When writing an MFF File, you have 2 distinct options: \'a0First, you may copy metadata from a primary MFF, or you may create a brand-new\
+MFF File from scratch. \'a0To COPY the meta-data, you would first read in the metadata from a first MFF and then ADD it to the MFFWriter.\
+\
+First, create a Writer and open the file:\
+\
+>>> filename = "myOutputMFF.mff"\
+>>> w = libMFF.MFFWriter()\
+>>> isOpen = w.openFile(filename)\
+>>> if isOpen:\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0print "File ready for writing"\
+... \'a0\'a0\'a0\'a0\'a0else\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0print "File could not be opened for writing"\
+>>> r = libMFF.MFFReader()\
+>>> isReading = r.openFile("SourceMFF.mff")\
+>>> # We will assume, for this tutorial, that the file opens properly.\
+\
+>>> # We have to create an "Info" object. \'a0This will have the following data.\
+>>> # the Serial number, firmware, and record things that you can set as you wish.\
+>>> # the MFFVersion MUST be set to 3.\
+>>> info = libMFF.PyInfo()\
+>>> info.setMFFVersion(3)\
+>>> info.setRecordTime("2014-12-25T21:43:49.213850-07:00")\
+>>> info.setAmpSerialNumber("A08080117")\
+>>> info.setAmpFirmwareVersion("0")\
+>>> info.setMovieDeltaPresent(False)\
+>>> w.setInfo(info)\
+\
+>>> numCats = r.numCategories()\
+>>> numEpochs = r.numEpochs()\
+>>> numPNS = r.numPNSSets()\
+>>> numEvents = r.numEventTracks()\
+>>> # Now copy these things over to the writer.\
+>>> for i in range(numCats):\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0w.addCategory(r.getCategory(i))\
+>>> # Do the above for all metadata to be copied.\
+\
+The metadata can now be written, but we need to give it the coordinate and sensor layouts for NetStation. \'a0These are\
+as member variables in the MFFWriter: \'a0print dir(libMFF.MFFWriter) for a full list\
+\
+>>> # Write the meta data we copied now.\
+>>> writer.writeMetaData(writer.CoordinateLayout_HydroCel256(), writer.SensorLayout_HydroCel256())\
+\
+The meta-data is largely ready to be written now. \'a0Now, the InfoN objects must be created. \'a0Each InfoN must be associated with\
+a single signalN.bin file.\
+\
+>>> numBlocks = r.prepareSignalBlocks()\
+\
+>>> # We can copy the blocks... or modify them as long as the number of samples in the output will not change.\
+\
+>>> # Copy over the signal data block by block\
+>>> for N in range(numData):\
+... \'a0\'a0\'a0\'a0\'a0\'a0# Create the filename for the signal resource.\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0infoN = reader.getInfoN(N)\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0res = reader.getFilename() + "/singal" + str(N+1) + ".bin"\
+... \'a0\'a0\'a0\'a0\'a0\'a0print "Reading signal from: " + res\
+... \'a0\'a0\'a0\'a0\'a0\'a0# blockStart = 0 means start from the first part of the file\
+... \'a0\'a0\'a0\'a0\'a0# blockEnd = -1 means read all blocks from the file.\
+... \'a0\'a0\'a0\'a0\'a0reader.readSignalBlocksFromInfoN(res, infoN, 0, -1)\
+... \'a0\'a0\'a0\'a0\'a0numblocks = reader.numSignalBlocks(infoN)\
+... \'a0\'a0\'a0\'a0\'a0print "Found " + str(numblocks) + " blocks read."\
+... \'a0\'a0\'a0\'a0\'a0for bid in range(numblocks):\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0print "Reading " + str(bid)\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0block = reader.getSignalBlock(infoN, bid)\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0print "Read: " + str(block.numSignals()) + ": " + str(block.getDataBlockSize())\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0ar = block.getDataAsNumpyArray()\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0# Do something to the data.\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0block.setDataFromNumpyArray(ar**2)\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0writer.writeSignalBlockToFile(infoN, block)\
+... \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0print "Written"\
+\
+>>> writer.closeFile()\
+\
+Now, to start from scratch, we will need to be a bit more careful. After we set the info file, we need to CREATE the various metadata.\
+I will highlight how this can be done for only one piece of metadata, but using the help() function on the others should provide plenty\
+of information to recreate the steps necessary\
+\
+>>> events = libMFF.PyEventTrack()\
+>>> events.setFilename("MyEventTrack.xml")\
+>>> events.setName("DIN1")\
+>>> events.setType("STIM")\
+\
+>>> # now add some events.\
+>>> event = libMFF.PyEvent()\
+>>> event.setBeginTime("2013-07-01T16:12:29.100000-08:00")\
+>>> event.setDuration(2000)\
+>>> event.setCode("DIN1")\
+>>> eventKey = libMFF.PyKey()\
+>>> eventKey.setCode("gidx")\
+>>> eventKey.setData("912")\
+>>> eventKey.setDataType("long")\
+>>> event.addKey(eventKey)\
+>>> events.addEvent(event)\
+\
+>>> # All our events are added to the event track. \'a0Add the track to the writer\
+>>> w.addEventTrack(events)\
+\
+The above steps will add a single event to a single event track and add it to the writer. \'a0Other metadata works similarly, you can always ask Python for help: \'a0help(libMFF.PyCategory) for example\
+\
+\
+\
+\
+\
+\
+\
+}
