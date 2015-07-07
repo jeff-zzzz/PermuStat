@@ -4,3 +4,9 @@ data/
 manuscript/
 support/
 *.pyc
+Microstate.ui
+GeoSource5.py
+GeoSource.ui
+microstates/ErpMicrostates.py
+microstates/MicroStatesPaperList.py
+

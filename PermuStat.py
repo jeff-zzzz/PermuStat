@@ -10,6 +10,7 @@ import sip
 sip.setapi('QString', 2)
 
 import sys
+
 from PyQt4 import QtCore, QtGui
 
 try:

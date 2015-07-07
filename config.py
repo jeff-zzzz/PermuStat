@@ -13,6 +13,8 @@ OneTCatVal = 0;  TwoTCatVal1 = 0; TwoTCatVal2 = 1;
 PairTCatVal1 = 0; PairTCatVal2 = 1; 
 Stat = []; Pval =[]; Sig =[]; StatOut = [];
 
+CatVal = 0;
+
 #thresholdcutoff = 0 
 #startSplTxt = 1 
 #endSplTxt = 1 

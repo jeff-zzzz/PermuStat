@@ -12,8 +12,9 @@
  #  length as number of samples. 
  #  GEV : global explained variance by Tmaps
 
-def Kmeans(Data, k, nStable): 
+def Kmeans(Data, k, nStable, Thred): 
     import numpy as np 
+    import scipy.stats 
     
     # Read Data 
     nC, nT = Data.shape 
@@ -108,9 +109,10 @@ def Kmeans(Data, k, nStable):
         Ith = np.where(KmeanId == (i+1))[0]
         SD[i] = np.std(DISS[Ith])
 
-    CInt = 1.96 * SD #; AngInt = np.arccos(1-CInt)
+    NormIsf = scipy.stats.norm.isf((1.0-Thred/100.0)/2.0) 
+    CInt = NormIsf * SD #; AngInt = np.arccos(1-CInt)
 
-    KmeanId1 = np.zeros(nT)
+    KmeanId1 = -np.zeros(nT)
     for i in range(k):
         Ith = np.where(KmeanId == (i+1))[0]  
         KmeanId1[Ith[DISS[Ith] < CInt[i]]] = i+1         
@@ -121,8 +123,8 @@ def Kmeans(Data, k, nStable):
     for i in range(k): 
         Ith = np.where(KmeanId1 == (i+1))[0] 
         Tmaps1[:,i] = np.mean(Data[:,Ith], axis=1)
-
-    KmeanId2 = np.zeros(nT) 
+    
+    KmeanId2 = -np.zeros(nT) 
     for i in range(k):
         Ith = np.where(KmeanId1 == (i+1))[0]
         temp = np.where(np.diff(Ith) > 1)[0]
@@ -130,33 +132,33 @@ def Kmeans(Data, k, nStable):
         temp = np.append(temp, Ith.shape[0])
         if len(temp) > 2 :
             templen = np.diff(temp) 
-            longest = np.where(templen == max(templen))[0]
+            longest = np.where(templen == max(templen))[0][0]
             KmeanId2[Ith[np.arange(temp[longest]+1, temp[longest+1])]] = i+1
         else:         
             KmeanId2[Ith] = i+1
     KmeanId2 = np.array(KmeanId2, dtype='i4')
-
+    
     # Generate Tmaps 
     Tmaps2 = np.zeros((nC, k))
     for i in range(k): 
         Ith = np.where(KmeanId2 == (i+1))[0] 
         Tmaps2[:,i] = np.mean(Data[:,Ith], axis=1)
-
-    startTP = np.zeros(k+1) # np.array ([np.arange(k+1), np.zeros(k+1)]).reshape(2, k+1)
-    for i in range(k+1):
-       startTP[i] = np.where(KmeanId2==i)[0][0]
+    
+    startTP = np.zeros(k) # np.array ([np.arange(k+1), np.zeros(k+1)]).reshape(2, k+1)
+    for i in range(k):
+       startTP[i] = np.where(KmeanId2==(i+1))[0][0]
     rankTmaps = np.argsort(startTP)
-
-    KmeanId3 = np.zeros(nT)
-    for i in range(k+1):
-        KmeanId3[KmeanId2==rankTmaps[i]] = i
+    
+    KmeanId3 = -np.zeros(nT)
+    for i in range(k):
+        KmeanId3[KmeanId2==(rankTmaps[i]+1)] = i+1
     KmeanId3 = np.array(KmeanId3, dtype='i4')
     
     Tmaps3 = np.zeros((nC, k))
     for i in range(k): 
         Ith = np.where(KmeanId3 == (i+1))[0] 
         Tmaps3[:,i] = np.mean(Data[:,Ith], axis=1)
-
+    
 
     KmeansOut = {'Tmaps':Tmaps,'KmeanId':KmeanId, 'Tmaps1':Tmaps1,'KmeanId1':KmeanId1, 'Tmaps2':Tmaps2,'KmeanId2':KmeanId2, 'Tmaps3':Tmaps3,'KmeanId3':KmeanId3,'DISS':DISS,'TmapId':TmapId,'GEVs':GEVs}#,'C_UTmaps':C_UTmaps}#,'GEV':GEV}#,'TmapIds':TmapIds}
     
