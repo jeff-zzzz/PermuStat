@@ -433,7 +433,7 @@ class Ui_FormMicro(object):
 
         from pandas import DataFrame 
         import pandas as pd         
-        gsn257 = pd.read_table('/Users/jesong1126/Python27/GeoPy/nscolor_hgsn/GSN257ToPy2.dat')  
+        gsn257 = pd.read_table('/Users/jesong1126/Python27/PermuStat/microstates/GSN257ToPy2.dat')  
         frame = DataFrame(gsn257 , columns=['ChLabel', 'X3', 'Y3', 'Z3','X2','Y2'])
         x2 = frame.values[:,4] 
         y2 = frame.values[:,5] 
