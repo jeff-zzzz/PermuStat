@@ -139,11 +139,24 @@ class Ui_FormMicro(object):
         self.editNumSim.setCursorPosition(1)
         self.editNumSim.setObjectName(_fromUtf8("editNumSim"))
         self.pbRunMicro = QtGui.QPushButton(self.pageMicro)
-        self.pbRunMicro.setGeometry(QtCore.QRect(30, 250, 311, 50))
+        self.pbRunMicro.setGeometry(QtCore.QRect(30, 250, 311, 40))
         self.pbRunMicro.setObjectName(_fromUtf8("pbRunMicro"))
+
+        self.labelMicro = QtGui.QLabel(self.pageMicro)
+        self.labelMicro.setGeometry(QtCore.QRect(60, 300, 130, 16))
+        self.labelMicro.setObjectName(_fromUtf8("labelMicro"))
+        self.editMicro = QtGui.QLineEdit(self.pageMicro)
+        self.editMicro.setGeometry(QtCore.QRect(220, 300, 100, 21))
+        self.editMicro.setCursorPosition(1)
+        self.editMicro.setObjectName(_fromUtf8("editMicro"))
+        
+        
         self.pbViewMicro = QtGui.QPushButton(self.pageMicro)
-        self.pbViewMicro.setGeometry(QtCore.QRect(30, 310, 311, 50))
+        self.pbViewMicro.setGeometry(QtCore.QRect(30, 330, 311, 40))
         self.pbViewMicro.setObjectName(_fromUtf8("pbViewMicro"))
+        
+        
+        
         self.toolBoxMicro.addItem(self.pageMicro, _fromUtf8(""))
         self.pageNetwork = QtGui.QWidget()
         self.pageNetwork.setObjectName(_fromUtf8("pageNetwork"))
@@ -199,6 +212,9 @@ class Ui_FormMicro(object):
 
         self.cbCategory.activated.connect(self.cbCategory_Callback)
         self.pbRunMicro.clicked.connect(self.pbRunMicro_Callback) 
+        self.pbViewMicro.clicked.connect(self.pbViewMicro_Callback) 
+        
+        
         self.pbClose.clicked.connect(self.pbClose_Callback)
         self.pbClose.clicked.connect(FormMicro.close)
         
@@ -235,8 +251,11 @@ class Ui_FormMicro(object):
         self.editThreshold.setText(_translate("FormMicro", "95", None))
         self.labelNumSim.setText(_translate("FormMicro", "Num of Simulation", None))
         self.editNumSim.setText(_translate("FormMicro", "1000", None))
-        self.pbRunMicro.setText(_translate("FormMicro", "Run", None))
+        self.pbRunMicro.setText(_translate("FormMicro", "Run", None))         
+        self.labelMicro.setText(_translate("FormMicro", "Microstate", None))
+        self.editMicro.setText(_translate("FormMicro", "1", None))        
         self.pbViewMicro.setText(_translate("FormMicro", "View in Reciprocity", None))
+
         self.labelCategory.setText(_translate("FormMicro", "Category", None))
         self.toolBoxMicro.setItemText(self.toolBoxMicro.indexOf(self.pageMicro), _translate("FormMicro", "Microstates", None))
         self.labelFrequency.setText(_translate("FormMicro", "Frequency", None))
@@ -348,7 +367,9 @@ class Ui_FormMicro(object):
         from braink import read_lfm                 
         import config                
         import glob 
-   
+    
+        os.system("open /Applications/EAV/Reciprocity.app")
+
         lfm_fname = glob.glob(HMdir+'/*.lfm')
         if os.path.exists(HMdir+'/fdmForwardMatrixOriented'):          
             K  = read_lfm.forward(HMdir+'/fdmForwardMatrixOriented', config.nE)  
@@ -389,11 +410,12 @@ class Ui_FormMicro(object):
         nC, nSamples, nTrials = s.shape 
         nV = K.shape[1]
                 
-        logalpha = Lcurve.MN(s[:,0,0], K)
-        poweralpha = logalpha[0]
-        alpha = pow(10, poweralpha)                      
-        print("from Lcurve alpha=%3.2e" %alpha)
+#        logalpha = Lcurve.MN(s[:,0,0], K)
+#        poweralpha = logalpha[0]
+#        alpha = pow(10, poweralpha)                      
+#        print("from Lcurve alpha=%3.2e" %alpha)
 
+        alpha = 0.001
         if MethodVal == 0:
             Imat = Imatrix.MN(alpha, K) 
         elif MethodVal == 1:
@@ -426,6 +448,7 @@ class Ui_FormMicro(object):
     def pbRunMicro_Callback(self):        
         import numpy as np 
         import config 
+#        import configMicrostates 
         from microstates import Kmeans  
         import matplotlib.pyplot as plt
         plt.ion()
@@ -544,6 +567,59 @@ class Ui_FormMicro(object):
             axes.set_xticks([])
             axes.set_yticks([])           
         plt.show()    
+        
+
+        from swcm import Imatrix #, Lcurve
+        import numpy as np      
+        MethodVal = config.MethodVal 
+        K = config.K
+        nV = K.shape[1]
+                
+#        logalpha = Lcurve.MN(Tmaps3[:,0], K)
+#        poweralpha = logalpha[0]
+#        alpha = pow(10, poweralpha)                      
+#        print("from Lcurve alpha=%3.2e" %alpha)
+       
+        alpha = 0.001         
+
+        if MethodVal == 0:
+            Imat = Imatrix.MN(alpha, K) 
+        elif MethodVal == 1:
+            Imat = Imatrix.sMN(alpha, K) 
+        else:
+            print("Inverse Method is not selected. ")
+            
+        sdenTmaps = np.zeros((nV, NumK)) 
+        for i in range(NumK):             
+            sdenTmaps[:,i] = np.dot(Imat, Tmaps3[:,i]) 
+
+        config.Tmaps = Tmaps3
+        config.sdenTmaps = sdenTmaps
+
+    ##-------------------------------------------------------------------------              
+    def pbViewMicro_Callback(self):      
+        import config 
+#        import os 
+#        os.system("open /Applications/EAV/Reciprocity.app")
+
+        Tmaps = config.Tmaps; 
+        sdenTmaps = config.sdenTmaps; 
+        
+        nC, NumK = Tmaps.shape  
+        micI = self.editMicro.text()
+        micI = int(micI)-1
+
+        from RabbitMQ import Connection
+        c = Connection.Connection('localhost')
+        c.connect()
+        c.sendEEGData(Tmaps[:, micI], "Microstates", "3:00pm")
+#        if config.Orientedval == True:           
+        c.sendOrientedData(abs(sdenTmaps[:, micI]), "Oriented", "2:00pm")        
+#        else: 
+#            c.sendTripleData(sdenTmaps[:, micI], "Triples", "2:00pm")        
+
+        c.disconnect()       
+
 
     def pbClose_Callback(self):
         import matplotlib.pyplot as plt
