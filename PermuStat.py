@@ -673,8 +673,8 @@ class Ui_FormStat(object):
     ##-------------------------------------------------------------------------              
     def pbSaveStat_Callback(self):      
         import os
-        os.system("open /Applications/EAV/Mimir.app")
-#        os.system("open /Applications/EAV/Reciprocity.app")
+#        os.system("open /Applications/EAV/Mimir.app")
+        os.system("open /Applications/EAV/Reciprocity.app")
 
 #        import config         
 #        Stat = config.Stat         
